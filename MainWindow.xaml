@@ -1,0 +1,56 @@
+﻿<Window x:Class="Hamnen.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Hamnen"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="700">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <!--<DataGrid Grid.Row="0" Grid.Column="0" x:Name="HarborGrid"/>-->
+        <DataGrid x:Name="DockedShips" Grid.Row="0" Grid.Column="1" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding XPath=harbor.DockedBoats, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Plats" Binding="{Binding Path=DockedAt}"/>
+                <DataGridTextColumn Header="Båttyp" Binding="{Binding Path=BoatType}"/>
+                <DataGridTextColumn Header="Nr" Binding="{Binding Path=Id}"/>
+                <DataGridTextColumn Header="Vikt" Binding="{Binding Path=Weight}"/>
+                <DataGridTextColumn Header="Max hastighet" Binding="{Binding Path=MaxVelocity}"/>
+                <DataGridTextColumn Header="Övrigt" Binding="{Binding Path=Other}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock x:Name="TestTextBlock" Grid.Column="0" Grid.Row="0" Grid.RowSpan="5" Visibility="Collapsed"/>
+        <!-- temporary to show the array-->
+        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Grid.Column="1" Grid.Row="1" Margin="5">
+            <TextBlock x:Name="DataLog"/>
+        </Border>
+
+        <StackPanel Grid.Row="0" Grid.Column="3" Margin="5">
+            <TextBlock x:Name="NumberOfRowBoatsTextBlock" Text="Antal roddbåtar:"/>
+            <TextBlock x:Name="NumberOfMotorBoatsTextBlock" Text="Antal motorbåtar:"/>
+            <TextBlock x:Name="NumberOfSailboatsTextBlock" Text="Antal segelbåtar:"/>
+            <TextBlock x:Name="NumberOfCargoShipsTextBlock" Text="Antal lastfartyg"/>
+            <TextBlock x:Name="NumberOfCatamaransTextBlock" Text="Antal Katamaraner:" Visibility="Collapsed"/>
+            <TextBlock x:Name="MaxVelocityAvrageTextBlock" Text="Medelvärdet för maxhastighet:"/>
+            <TextBlock x:Name="NumberOfSpotsLeft" Text="Antal lediga platser:"/>
+            <TextBlock Text="Antal avisade båtar:"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+            <Button x:Name="NextDayButton" Margin="5" Content="Next Day" Click="ButtonNewDay_click"/>
+        </StackPanel>
+    </Grid>
+</Window>
