@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hamnen.Classes
 {
-    class RowBoat : Boat
+    public class RowBoat : Boat
     {
         public int MaxAmountOfPeople { get; set; }
         public RowBoat()

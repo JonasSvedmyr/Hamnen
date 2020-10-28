@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Hamnen.Classes
 {
-    class CargoShip : Boat
+    public class CargoShip : Boat
     {
         public int NumberOfContainers { get; set; }
         public CargoShip()

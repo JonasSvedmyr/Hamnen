@@ -9,7 +9,7 @@ namespace Hamnen.Classes
 {
     class FirstFit : IDock
     {
-        public int[] FindDocking(Harbor harbor, Boat boat)
+        public int[] FindDocking(HarborViewModel harbor, Boat boat)
         {
             int[] dockAt;
             if (boat.Size < 1)
@@ -75,7 +75,7 @@ namespace Hamnen.Classes
             return dockAt;
         }
 
-        public void Dock(Boat boat, Harbor harbor)
+        public void Dock(Boat boat, HarborViewModel harbor)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace Hamnen.Classes
             }
         }
 
-        public void RemoveFromDock(Boat boat, Harbor harbor)
+        public void RemoveFromDock(Boat boat, HarborViewModel harbor)
         {
             var tempList = new List<string>();
             for (int i = 0; i < harbor.Moorings.Length; i++)

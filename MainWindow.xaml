@@ -15,28 +15,35 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <!--<DataGrid Grid.Row="0" Grid.Column="0" x:Name="HarborGrid"/>-->
-        <DataGrid x:Name="DockedShips" Grid.Row="0" Grid.Column="1" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding XPath=harbor.DockedBoats, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Plats" Binding="{Binding Path=DockedAt}"/>
-                <DataGridTextColumn Header="Båttyp" Binding="{Binding Path=BoatType}"/>
-                <DataGridTextColumn Header="Nr" Binding="{Binding Path=Id}"/>
-                <DataGridTextColumn Header="Vikt" Binding="{Binding Path=Weight}"/>
-                <DataGridTextColumn Header="Max hastighet" Binding="{Binding Path=MaxVelocity}"/>
-                <DataGridTextColumn Header="Övrigt" Binding="{Binding Path=Other}"/>
-            </DataGrid.Columns>
-        </DataGrid>
-        <TextBlock x:Name="TestTextBlock" Grid.Column="0" Grid.Row="0" Grid.RowSpan="5" Visibility="Collapsed"/>
+
+
+        <ScrollViewer Grid.Row="0" Grid.Column="1">
+            <DataGrid x:Name="DockedShips" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding DockedBoats}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Plats" Binding="{Binding Path=DockedAt}"/>
+                    <DataGridTextColumn Header="Båttyp" Binding="{Binding Path=BoatType}"/>
+                    <DataGridTextColumn Header="Nr" Binding="{Binding Path=Id}"/>
+                    <DataGridTextColumn Header="Vikt" Binding="{Binding Path=Weight}"/>
+                    <DataGridTextColumn Header="Max hastighet" Binding="{Binding Path=MaxVelocity}"/>
+                    <DataGridTextColumn Header="Övrigt" Binding="{Binding Path=Other}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+        <TextBlock x:Name="TestTextBlock" Grid.Column="0" Grid.Row="0" Grid.RowSpan="5" Visibility="Visible"/>
         <!-- temporary to show the array-->
-        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Grid.Column="1" Grid.Row="1" Margin="5">
-            <TextBlock x:Name="DataLog"/>
-        </Border>
+        <ScrollViewer Grid.Column="1" Grid.Row="1">
+
+            <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5">
+                <TextBlock x:Name="DataLog" Text="{Binding Message}"/>
+            </Border>
+        </ScrollViewer>
 
         <StackPanel Grid.Row="0" Grid.Column="3" Margin="5">
             <TextBlock x:Name="NumberOfRowBoatsTextBlock" Text="Antal roddbåtar:"/>

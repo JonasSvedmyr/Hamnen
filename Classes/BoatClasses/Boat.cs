@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hamnen.Classes
 {
-    abstract class Boat
+    public abstract class Boat
     {
         public string Id { get; set; }
         public string DockedAt { get; set; }

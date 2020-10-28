@@ -20,7 +20,7 @@ namespace Hamnen.Classes
             }
             return idString.ToUpper();
         }
-        public static void SaveHarbor(Harbor harbor)
+        public static void SaveHarbor(HarborViewModel harbor)
         {
             using (StreamWriter sr = new StreamWriter("DockedBoats.Txt"))
             {
@@ -54,7 +54,7 @@ namespace Hamnen.Classes
                 }
             }
         }
-        public static void LoadHarbor(Harbor harbor)
+        public static void LoadHarbor(HarborViewModel harbor)
         {
             using (StreamReader sr = new StreamReader("DockedBoats.Txt"))
             {

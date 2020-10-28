@@ -9,7 +9,7 @@ namespace Hamnen.ExtensionMethods
 {
     static class Extensions
     {
-        public static List<int> FindFreeSpace(this Harbor harbor)
+        public static List<int> FindFreeSpace(this HarborViewModel harbor)
         {
             List<int> moornings = new List<int>();
 
@@ -22,7 +22,7 @@ namespace Hamnen.ExtensionMethods
             }
             return moornings;
         }
-        public static double AvrageSpeed(this Harbor harbor)
+        public static double AvrageSpeed(this HarborViewModel harbor)
         {
             double sum = 0;
             foreach (var boat in harbor.DockedBoats)

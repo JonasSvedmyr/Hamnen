@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hamnen.Classes
 {
-    class MotorBoat : Boat
+    public class MotorBoat : Boat
     {
         public int HorsePower { get; set; }
         public MotorBoat()

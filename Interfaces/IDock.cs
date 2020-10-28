@@ -6,8 +6,8 @@ namespace Hamnen.Classes
 {
     interface IDock
     {
-        public int[] FindDocking(Harbor harbor, Boat boat);
-        public void Dock(Boat boat, Harbor harbor);
-        public void RemoveFromDock(Boat boat, Harbor harbor);
+        public int[] FindDocking(HarborViewModel harbor, Boat boat);
+        public void Dock(Boat boat, HarborViewModel harbor);
+        public void RemoveFromDock(Boat boat, HarborViewModel harbor);
     }
 }

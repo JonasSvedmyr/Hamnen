@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hamnen.Classes.BoatClasses
 {
-    class Catamaran :   Boat
+    public class Catamaran :   Boat
     {
         public int AmountOfBeds { get; set; }
         public Catamaran()

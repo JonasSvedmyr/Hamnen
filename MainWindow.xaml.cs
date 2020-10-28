@@ -2,6 +2,7 @@
 using Hamnen.ExtensionMethods;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 
@@ -12,19 +13,20 @@ namespace Hamnen
     /// </summary>
     public partial class MainWindow : Window
     {
-        Harbor harbor;
+        public HarborViewModel harbor { get; set; }
         IDock _dock;
+
         public MainWindow()
         {
             InitializeComponent();
             _dock = new FirstFit();
-            harbor = new Harbor(64);
+            harbor = new HarborViewModel(64);
             var newBoats = Utilitis.GenerateBoats(5);
-            //foreach (var boat in newBoats)
-            //{
-            //    _dock.Dock(boat, harbor);
-            //}
-            Utilitis.LoadHarbor(harbor);
+            foreach (var boat in newBoats)
+            {
+                _dock.Dock(boat, harbor);
+            }
+            //Utilitis.LoadHarbor(harbor);
             int index = 0;
             foreach (Mooring mooring in harbor.Moorings)
             {
@@ -39,7 +41,7 @@ namespace Hamnen
                 index++;
             }
             LogHarbor();
-            
+            DataContext = harbor;
         }
         void LogHarbor()
         {
@@ -71,28 +73,12 @@ namespace Hamnen
             {
                 foreach (var boat in boatsToRemove)
                 {
-                    if (DataLog.Text == "")
-                    {
-                        DataLog.Text += $"{boat.Id} har lämnat hamnen";
-                    }
-                    else
-                    {
-                        DataLog.Text += $"\n{boat.Id} har lämnat hamnen";
-                    }
                     _dock.RemoveFromDock(boat, harbor);
                 }
             }
             var newBoats = Utilitis.GenerateBoats(5);
             foreach (var boat in newBoats)
             {
-                if (DataLog.Text == "")
-                {
-                    DataLog.Text += $"{boat.Id} har kommit till hamnen";
-                }
-                else
-                {
-                    DataLog.Text += $"\n{boat.Id} har har kommit till hamnen";
-                }
                 _dock.Dock(boat, harbor);
             }
             TestTextBlock.Text = "";

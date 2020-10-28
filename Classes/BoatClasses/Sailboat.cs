@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Hamnen.Classes
 {
-    class Sailboat : Boat
+    public class Sailboat : Boat
     {
         public int BoatLenght { get; set; }
         public Sailboat()
