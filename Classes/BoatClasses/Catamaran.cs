@@ -9,16 +9,16 @@ namespace Hamnen.Classes.BoatClasses
         public int AmountOfBeds { get; set; }
         public Catamaran()
         {
-            Id = $"K-{Utilitis.GenerateId()}";
+            Id = $"K-{Utils.GenerateId()}";
             BoatType = "Katamaran";
-            Weight = Utilitis.Random.Next(1200, 8000 + 1);
-            MaxVelocity = Utilitis.Random.Next(1, 12 + 1) * 1.852; //Km/H
-            AmountOfBeds = Utilitis.Random.Next(1, 4 + 1);
+            Weight = Utils.Random.Next(1200, 8000 + 1);
+            MaxVelocity = Utils.Random.Next(1, 12 + 1) * 1.852; //Km/H
+            AmountOfBeds = Utils.Random.Next(1, 4 + 1);
             TimeBeforeLeaving = 3;
             Size = 3;
             Other = $"Antal Bäddplatser: {AmountOfBeds}";
         }
-        public Catamaran(string id, int weight, double maxVelocity, string amountOfBeds, int timeBeforeLeaving)
+        public Catamaran(string id, int weight, double maxVelocity, string amountOfBeds, int timeBeforeLeaving, string dockedAt)
         {
             Id = id;
             Weight = weight;
@@ -27,6 +27,7 @@ namespace Hamnen.Classes.BoatClasses
             BoatType = "Katamaran";
             Size = 3;
             Other = amountOfBeds;
+            DockedAt = dockedAt;
         }
     }
 }

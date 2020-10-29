@@ -21,83 +21,58 @@ namespace Hamnen
             InitializeComponent();
             _dock = new FirstFit();
             harbor = new HarborViewModel(64);
-            var newBoats = Utilitis.GenerateBoats(5);
-            foreach (var boat in newBoats)
+            try
             {
-                _dock.Dock(boat, harbor);
+                Utils.LoadHarbor(harbor);
             }
-            //Utilitis.LoadHarbor(harbor);
-            int index = 0;
-            foreach (Mooring mooring in harbor.Moorings)
+            catch (System.Exception)
             {
-                if (!mooring.isEmpthy)
+                var newBoats = Utils.GenerateBoats(5);
+                foreach (var boat in newBoats)
                 {
-                    foreach (var boatId in mooring.IdOfDockedBoat)
-                    {
-                        TestTextBlock.Text += $"\n{index} = {boatId[0]}";
-                    }
-
+                    _dock.Dock(boat, harbor);
                 }
-                index++;
             }
-            LogHarbor();
+            LogFreeSpace();
+            harbor.UpdateHarborStatistics();
             DataContext = harbor;
         }
-        void LogHarbor()
-        {
-            int temp = harbor.DockedBoats.Where(q => q.BoatType == "Roddbåt").Count();
-            NumberOfRowBoatsTextBlock.Text = $"Antal roddbåtar: {temp}";
-            temp = harbor.DockedBoats.Where(q => q.BoatType == "Motorbåt").Count();
-            NumberOfMotorBoatsTextBlock.Text = $"Antal motorbåtar: {temp}";
-            temp = harbor.DockedBoats.Where(q => q.BoatType == "Lastfartyg").Count();
-            NumberOfCargoShipsTextBlock.Text = $"Antal lastfartyg: {temp}";
-            temp = harbor.DockedBoats.Where(q => q.BoatType == "Segelbåt").Count();
-            NumberOfSailboatsTextBlock.Text = $"Antal segelbåt: {temp}";
-            temp = harbor.FindFreeSpace().Count();
-            NumberOfSpotsLeft.Text = $"Antal platser kvar: {temp}";
-            double temp2 = harbor.AvrageSpeed();
-            MaxVelocityAvrageTextBlock.Text = $"Medelhastiget för alla båtar: {temp2}Km/H";
 
-        }
-        //Datagrid does not update when i press the button
         private void ButtonNewDay_click(object sender, RoutedEventArgs e)
         {
             NextDayButton.IsEnabled = false;
+            harbor.Message = "";
             foreach (Boat boat in harbor.DockedBoats)
             {
                 boat.TimeBeforeLeaving--;
             }
-            DataLog.Text = "";
             List<Boat> boatsToRemove = harbor.DockedBoats.Where(b => b.TimeBeforeLeaving <= 0).ToList();
-            if(boatsToRemove.Count > 0)
+            if (boatsToRemove.Count > 0)
             {
                 foreach (var boat in boatsToRemove)
                 {
                     _dock.RemoveFromDock(boat, harbor);
                 }
             }
-            var newBoats = Utilitis.GenerateBoats(5);
+            var newBoats = Utils.GenerateBoats(5);
             foreach (var boat in newBoats)
             {
                 _dock.Dock(boat, harbor);
             }
-            TestTextBlock.Text = "";
-            int index = 0;
-            foreach (Mooring mooring in harbor.Moorings)
-            {
-                if (!mooring.isEmpthy)
-                {
-                    foreach (var boatId in mooring.IdOfDockedBoat)
-                    {
-                        TestTextBlock.Text += $"\n{index} = {boatId[0]}";
-                    }
-
-                }
-                index++;
-            }
-            LogHarbor();
-            Utilitis.SaveHarbor(harbor);
+            LogFreeSpace();
+            harbor.UpdateHarborStatistics();
+            Utils.SaveHarbor(harbor);
             NextDayButton.IsEnabled = true;
+        }
+
+        public void LogFreeSpace()
+        {
+            harbor.FreeSpace = "Lediga platser:";
+            var freeSpace = harbor.FindFreeSpace();
+            foreach (var mooring in freeSpace)
+            {
+                harbor.FreeSpace += $"\nPlats: {mooring}";
+            }
         }
     }
 }

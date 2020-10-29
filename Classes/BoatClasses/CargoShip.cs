@@ -10,16 +10,16 @@ namespace Hamnen.Classes
         public int NumberOfContainers { get; set; }
         public CargoShip()
         {
-            Id = $"L-{Utilitis.GenerateId()}";
+            Id = $"L-{Utils.GenerateId()}";
             BoatType = "Lastfartyg";
-            Weight = Utilitis.Random.Next(3000, 20000 + 1);
-            MaxVelocity = Utilitis.Random.Next(1, 20 + 1) * 1.852; //Km/H
-            NumberOfContainers = Utilitis.Random.Next(0, 500 + 1);
+            Weight = Utils.Random.Next(3000, 20000 + 1);
+            MaxVelocity = Utils.Random.Next(1, 20 + 1) * 1.852; //Km/H
+            NumberOfContainers = Utils.Random.Next(0, 500 + 1);
             TimeBeforeLeaving = 6;
             Size = 4;
             Other = $"Containers: {NumberOfContainers}";
         }
-        public CargoShip(string id, int weight, double maxVelocity, string numberOfContainers, int timeBeforeLeaving)
+        public CargoShip(string id, int weight, double maxVelocity, string numberOfContainers, int timeBeforeLeaving, string dockedAt)
         {
             Id = id;
             Weight = weight;
@@ -28,6 +28,7 @@ namespace Hamnen.Classes
             BoatType = "Lastfartyg";
             Size = 4;
             Other = numberOfContainers;
+            DockedAt = dockedAt;
         }
     }
 }

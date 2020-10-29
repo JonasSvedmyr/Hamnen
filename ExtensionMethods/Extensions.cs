@@ -22,24 +22,27 @@ namespace Hamnen.ExtensionMethods
             }
             return moornings;
         }
-        public static double AvrageSpeed(this HarborViewModel harbor)
+        public static List<int> FindFreeSpace(this Mooring[] moorings)
+        {
+            List<int> moornings = new List<int>();
+
+            for (int i = 0; i < moorings.Length; i++)
+            {
+                if (moorings[i].isEmpthy)
+                {
+                    moornings.Add(i);
+                }
+            }
+            return moornings;
+        }
+        public static double AvrageSpeed(this ObservableCollection<Boat> DockedBoats)
         {
             double sum = 0;
-            foreach (var boat in harbor.DockedBoats)
+            foreach (var boat in DockedBoats)
             {
                 sum += boat.MaxVelocity;
             }
-            return sum / harbor.DockedBoats.Count;
-        }
-        public static ObservableCollection<Boat> ToObservabelCollection(this List<Boat> boats)
-        {
-            ObservableCollection<Boat> tempList = new ObservableCollection<Boat>();
-            foreach (var boat in boats)
-            {
-                tempList.Add(boat);
-            }
-            return tempList;
+            return Math.Round(sum / DockedBoats.Count,5);
         }
     }
-    
 }

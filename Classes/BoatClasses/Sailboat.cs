@@ -9,16 +9,16 @@ namespace Hamnen.Classes
         public int BoatLenght { get; set; }
         public Sailboat()
         {
-            Id = $"S-{Utilitis.GenerateId()}";
+            Id = $"S-{Utils.GenerateId()}";
             BoatType = "Segelbåt";
-            Weight = Utilitis.Random.Next(800, 6000 + 1);
-            MaxVelocity = Utilitis.Random.Next(1, 12 + 1) * 1.852;
-            BoatLenght = Utilitis.Random.Next(10, 60 + 1);//Fot
+            Weight = Utils.Random.Next(800, 6000 + 1);
+            MaxVelocity = Utils.Random.Next(1, 12 + 1) * 1.852;
+            BoatLenght = Utils.Random.Next(10, 60 + 1);//Fot
             TimeBeforeLeaving = 4;
             Size = 2;
             Other = $"Båtlängd: {BoatLenght} m";
         }
-        public Sailboat(string id, int weight, double maxVelocity, string boatLenght, int timeBeforeLeaving)
+        public Sailboat(string id, int weight, double maxVelocity, string boatLenght, int timeBeforeLeaving, string dockedAt)
         {
             Id = id;
             Weight = weight;
@@ -27,7 +27,7 @@ namespace Hamnen.Classes
             BoatType = "Segelbåt";
             Size = 2;
             Other = boatLenght;
-
+            DockedAt = dockedAt;
         }
     }
 }

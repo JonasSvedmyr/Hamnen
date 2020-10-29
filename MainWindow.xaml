@@ -8,12 +8,11 @@
         Title="MainWindow" Height="450" Width="700">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
         </Grid.ColumnDefinitions>
-
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="*"/>
@@ -21,10 +20,7 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <!--<DataGrid Grid.Row="0" Grid.Column="0" x:Name="HarborGrid"/>-->
-
-
-        <ScrollViewer Grid.Row="0" Grid.Column="1">
+        <ScrollViewer Grid.Row="0" Grid.Column="0">
             <DataGrid x:Name="DockedShips" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding DockedBoats}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Plats" Binding="{Binding Path=DockedAt}"/>
@@ -36,27 +32,52 @@
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
-        <TextBlock x:Name="TestTextBlock" Grid.Column="0" Grid.Row="0" Grid.RowSpan="5" Visibility="Visible"/>
-        <!-- temporary to show the array-->
-        <ScrollViewer Grid.Column="1" Grid.Row="1">
-
-            <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5">
+        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5" Grid.Column="0" Grid.Row="1">
+            <ScrollViewer >
                 <TextBlock x:Name="DataLog" Text="{Binding Message}"/>
-            </Border>
-        </ScrollViewer>
-
-        <StackPanel Grid.Row="0" Grid.Column="3" Margin="5">
-            <TextBlock x:Name="NumberOfRowBoatsTextBlock" Text="Antal roddbåtar:"/>
-            <TextBlock x:Name="NumberOfMotorBoatsTextBlock" Text="Antal motorbåtar:"/>
-            <TextBlock x:Name="NumberOfSailboatsTextBlock" Text="Antal segelbåtar:"/>
-            <TextBlock x:Name="NumberOfCargoShipsTextBlock" Text="Antal lastfartyg"/>
-            <TextBlock x:Name="NumberOfCatamaransTextBlock" Text="Antal Katamaraner:" Visibility="Collapsed"/>
-            <TextBlock x:Name="MaxVelocityAvrageTextBlock" Text="Medelvärdet för maxhastighet:"/>
-            <TextBlock x:Name="NumberOfSpotsLeft" Text="Antal lediga platser:"/>
-            <TextBlock Text="Antal avisade båtar:"/>
+            </ScrollViewer>
+        </Border>
+        <StackPanel Grid.Row="0" Grid.Column="2" Margin="5">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="NumberOfRowBoatsTextBlock" Text="Antal roddbåtar: "/>
+                <TextBlock Text="{Binding AmountOfRowBoats}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="NumberOfMotorBoatsTextBlock" Text="Antal motorbåtar: "/>
+                <TextBlock Text="{Binding AmountOfMotorBoats}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="NumberOfSailboatsTextBlock" Text="Antal segelbåtar: "/>
+                <TextBlock Text="{Binding AmountOfSailBoats}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="NumberOfCargoShipsTextBlock" Text="Antal lastfartyg: "/>
+                <TextBlock Text="{Binding AmountOfCargoShips}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="NumberOfCatamaransTextBlock" Text="Antal Katamaraner: "/>
+                <TextBlock Text="{Binding AmountOfCatamarans}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="MaxVelocityAvrageTextBlock" Text="Medelvärdet för maxhastighet: "/>
+                <TextBlock Text="{Binding AvrageSpeed}"/>
+                <TextBlock Text="Km/H"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock x:Name="NumberOfSpotsLeft" Text="Antal lediga platser: "/>
+                <TextBlock Text="{Binding MooringsLeft}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Antal avisade båtar: "/>
+                <TextBlock Text="{Binding BoatsRejected}"/>
+            </StackPanel>
         </StackPanel>
-
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1">
+        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5" Grid.Column="2" Grid.Row="1">
+            <ScrollViewer>
+                <TextBlock x:Name="FreeSpaceLog" Text="{Binding FreeSpace}"/>
+            </ScrollViewer>
+        </Border>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
             <Button x:Name="NextDayButton" Margin="5" Content="Next Day" Click="ButtonNewDay_click"/>
         </StackPanel>
     </Grid>

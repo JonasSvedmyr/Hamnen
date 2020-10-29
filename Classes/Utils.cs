@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Hamnen.Classes
 {
-    static class Utilitis
+    static class Utils
     {
         public static Random Random = new Random();
         public static string GenerateId()
@@ -67,22 +67,22 @@ namespace Hamnen.Classes
                     switch (temp[1])
                     {
                         case "Motorbåt":
-                            boat = new MotorBoat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]),temp[4], int.Parse(temp[5]));
+                            boat = new MotorBoat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]),temp[4], int.Parse(temp[5]), temp[2]);
                             break;
                         case "Roddbåt":
-                            boat = new RowBoat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]),temp[4], int.Parse(temp[5]));
+                            boat = new RowBoat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]),temp[4], int.Parse(temp[5]), temp[2]);
 
                             break;
                         case "Lastfartyg":
-                            boat = new CargoShip(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]));
+                            boat = new CargoShip(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
 
                             break;
                         case "Segelbåt":
-                            boat = new Sailboat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]));
+                            boat = new Sailboat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
 
                             break;
                         case "Katamaran":
-                            boat = new Catamaran(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]));
+                            boat = new Catamaran(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
                             break;
                         default:
                             break;
@@ -116,7 +116,7 @@ namespace Hamnen.Classes
             List<Boat> boats = new List<Boat>();
             for (int i = 0; i < numberToGenerate; i++)
             {
-                randomNumber = Random.Next(0, 4);
+                randomNumber = Random.Next(0, 5);
                 switch (randomNumber)
                 {
                     case 0:
@@ -130,6 +130,9 @@ namespace Hamnen.Classes
                         break;
                     case 3:
                         boats.Add(new CargoShip());
+                        break;
+                    case 4:
+                        boats.Add(new Catamaran());
                         break;
                     default:
                         break;

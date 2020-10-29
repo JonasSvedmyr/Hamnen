@@ -99,8 +99,15 @@ namespace Hamnen.Classes
             }
             catch
             {
-                //does nothing for now
-                //Comes here if it does not find a spot for the boat
+                harbor.BoatsRejected++;
+                if (harbor.Message == "")
+                {
+                    harbor.Message += $"En båt har blivit avisad för att den inte fick plats";
+                }
+                else
+                {
+                    harbor.Message += $"\nEn båt har blivit avisad för att den inte fick plats";
+                }
             }
         }
 
