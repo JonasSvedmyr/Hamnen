@@ -1,6 +1,7 @@
 ﻿using Hamnen.Classes.BoatClasses;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 
@@ -9,6 +10,10 @@ namespace Hamnen.Classes
     static class Utils
     {
         public static Random Random = new Random();
+
+        public static int BoatsRejected;
+        public static string MessegeFirstDock;
+        public static string MessegeSecondDock;
         public static string GenerateId()
         {
             string idString = "";
@@ -20,11 +25,11 @@ namespace Hamnen.Classes
             }
             return idString.ToUpper();
         }
-        public static void SaveHarbor(HarborViewModel harbor)
+        public static void SaveHarbor(ObservableCollection<Boat> firstDock, ObservableCollection<Boat> secondDock, Mooring[] mooringsFirstDock, Mooring[] mooringsSecondDock)
         {
             using (StreamWriter sr = new StreamWriter("DockedBoats.Txt"))
             {
-                foreach (var boat in harbor.DockedBoats)
+                foreach (var boat in firstDock)
                 {
                     sr.WriteLine($"{boat.Id};{boat.BoatType};{boat.DockedAt};{boat.MaxVelocity};{boat.Other};{boat.TimeBeforeLeaving};{boat.Weight};");
                 }
@@ -32,13 +37,13 @@ namespace Hamnen.Classes
             using (StreamWriter sr = new StreamWriter("Moorings.Txt"))
             {
                 string temp;
-                for (int i = 0; i < harbor.Moorings.Length; i++)
+                for (int i = 0; i < mooringsFirstDock.Length; i++)
                 {
-                    if (!harbor.Moorings[i].isEmpthy)
+                    if (!mooringsFirstDock[i].isEmpthy)
                     {
 
                         temp = "";
-                        foreach (var boatId in harbor.Moorings[i].IdOfDockedBoat)
+                        foreach (var boatId in mooringsFirstDock[i].IdOfDockedBoat)
                         {
                             if (temp == "")
                             {
@@ -49,12 +54,43 @@ namespace Hamnen.Classes
                                 temp += $",{boatId}";
                             }
                         }
-                        sr.WriteLine($"{i};{temp};{harbor.Moorings[i].SpaceLeft}");
+                        sr.WriteLine($"{i};{temp};{mooringsFirstDock[i].SpaceLeft}");
+                    }
+                }
+            }
+            using (StreamWriter sr = new StreamWriter("DockedBoats2.Txt"))
+            {
+                foreach (var boat in secondDock)
+                {
+                    sr.WriteLine($"{boat.Id};{boat.BoatType};{boat.DockedAt};{boat.MaxVelocity};{boat.Other};{boat.TimeBeforeLeaving};{boat.Weight};");
+                }
+            }
+            using (StreamWriter sr = new StreamWriter("Moorings2.Txt"))
+            {
+                string temp;
+                for (int i = 0; i < mooringsSecondDock.Length; i++)
+                {
+                    if (!mooringsSecondDock[i].isEmpthy)
+                    {
+
+                        temp = "";
+                        foreach (var boatId in mooringsSecondDock[i].IdOfDockedBoat)
+                        {
+                            if (temp == "")
+                            {
+                                temp += $"{boatId}";
+                            }
+                            else
+                            {
+                                temp += $",{boatId}";
+                            }
+                        }
+                        sr.WriteLine($"{i};{temp};{mooringsSecondDock[i].SpaceLeft}");
                     }
                 }
             }
         }
-        public static void LoadHarbor(HarborViewModel harbor)
+        public static void LoadHarbor(ObservableCollection<Boat> firstDock, ObservableCollection<Boat> secondDock, Mooring[] mooringsFirstDock, Mooring[] mooringsSecondDock)
         {
             using (StreamReader sr = new StreamReader("DockedBoats.Txt"))
             {
@@ -87,7 +123,7 @@ namespace Hamnen.Classes
                         default:
                             break;
                     }
-                    harbor.DockedBoats.Add(boat);
+                    firstDock.Add(boat);
                 }
             }
             using (StreamReader sr = new StreamReader("Moorings.Txt"))
@@ -100,12 +136,66 @@ namespace Hamnen.Classes
                 {
                     temp = line.Split(";");
                     MooringId = int.Parse(temp[0]);
-                    harbor.Moorings[MooringId].SpaceLeft = double.Parse(temp[2]);
-                    harbor.Moorings[MooringId].isEmpthy = false;
+                    mooringsFirstDock[MooringId].SpaceLeft = double.Parse(temp[2]);
+                    mooringsFirstDock[MooringId].isEmpthy = false;
                     temp2 = temp[1].Split(",");
                     for (int i = 0; i < temp2.Length; i++)
                     {
-                        harbor.Moorings[MooringId].IdOfDockedBoat.Add(temp2[i]);
+                        mooringsFirstDock[MooringId].IdOfDockedBoat.Add(temp2[i]);
+                    }
+                }
+            }
+
+            using (StreamReader sr = new StreamReader("DockedBoats2.Txt"))
+            {
+                string[] temp;
+                string line;
+                Boat boat = new RowBoat();
+                while ((line = sr.ReadLine()) != null)
+                {
+                    temp = line.Split(";");
+                    switch (temp[1])
+                    {
+                        case "Motorbåt":
+                            boat = new MotorBoat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
+                            break;
+                        case "Roddbåt":
+                            boat = new RowBoat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
+
+                            break;
+                        case "Lastfartyg":
+                            boat = new CargoShip(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
+
+                            break;
+                        case "Segelbåt":
+                            boat = new Sailboat(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
+
+                            break;
+                        case "Katamaran":
+                            boat = new Catamaran(temp[0], int.Parse(temp[6]), double.Parse(temp[3]), temp[4], int.Parse(temp[5]), temp[2]);
+                            break;
+                        default:
+                            break;
+                    }
+                    secondDock.Add(boat);
+                }
+            }
+            using (StreamReader sr = new StreamReader("Moorings2.Txt"))
+            {
+                string line;
+                string[] temp;
+                string[] temp2;
+                int MooringId;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    temp = line.Split(";");
+                    MooringId = int.Parse(temp[0]);
+                    mooringsSecondDock[MooringId].SpaceLeft = double.Parse(temp[2]);
+                    mooringsSecondDock[MooringId].isEmpthy = false;
+                    temp2 = temp[1].Split(",");
+                    for (int i = 0; i < temp2.Length; i++)
+                    {
+                        mooringsSecondDock[MooringId].IdOfDockedBoat.Add(temp2[i]);
                     }
                 }
             }
@@ -140,18 +230,5 @@ namespace Hamnen.Classes
             }
             return boats;
         }
-        public static string BoatArrives(string boatId)
-        {
-            return $"{boatId} har kommit till hamnen";
-        }
-        public static string BoatLeaves(string boatId)
-        {
-            return $"{boatId} har lämnat hamnen";
-        }
-        public static string BoatRejected(string boatId)
-        {
-            return $"{boatId} fick inte plats i hamnen";
-        }
     }
-
 }

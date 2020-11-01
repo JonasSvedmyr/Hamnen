@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection.Metadata;
 using System.Security.Cryptography.Xml;
@@ -9,9 +10,10 @@ namespace Hamnen.Classes
 {
     class FirstFit : IDock
     {
-        public int[] FindDocking(HarborViewModel harbor, Boat boat)
+        public (int[], bool) FindDocking(Boat boat, ObservableCollection<Boat> Dock, Mooring[] moorings)
         {
             int[] dockAt;
+            bool success = false;
             if (boat.Size < 1)
             {
                 dockAt = new int[1];
@@ -25,25 +27,26 @@ namespace Hamnen.Classes
             double flagIfSpotfound = 0;
             if (boat is RowBoat)
             {
-                List<Boat> TempListOfRowBoats = harbor.DockedBoats.Where(b => b.Id.StartsWith("R")).ToList();
+                List<Boat> TempListOfRowBoats = Dock.Where(b => b.Id.StartsWith("R")).ToList();
                 if (TempListOfRowBoats.Count % 2 != 0)
                 {
-                    var list = harbor.Moorings.Where(q => q.SpaceLeft > 0 && q.SpaceLeft < 1).ToList();
+                    var list = moorings.Where(q => q.SpaceLeft > 0 && q.SpaceLeft < 1).ToList();
                     string id = list[0].IdOfDockedBoat[0];
-                    for (int i = 0; i < harbor.Moorings.Length; i++)
+                    for (int i = 0; i < moorings.Length; i++)
                     {
-                        foreach (var boatId in harbor.Moorings[i].IdOfDockedBoat)
+                        foreach (var boatId in moorings[i].IdOfDockedBoat)
                         {
                             if (id == boatId)
                             {
                                 dockAt[0] = i;
-                                return dockAt;
+                                success = true;
+                                return (dockAt, success);
                             }
                         }
                     }
                 }
             }
-            foreach (var morring in harbor.Moorings)
+            foreach (var morring in moorings)
             {
                 if (flagIfSpotfound == boat.Size)
                 {
@@ -70,21 +73,24 @@ namespace Hamnen.Classes
 
             if (flagIfSpotfound != boat.Size)
             {
-                throw new Exception();
+                success = false;
+                return (dockAt, success);
             }
-            return dockAt;
+            success = true;
+            return (dockAt, success);
         }
 
-        public void Dock(Boat boat, HarborViewModel harbor)
+        public void Dock(Boat boat, ObservableCollection<Boat> firstDock, ObservableCollection<Boat> secondDock, Mooring[] mooringsFirstDock, Mooring[] mooringsSecondDock, string messageFirstDock, string MessageSecondDock)
         {
-            try
+
+            (int[] dockAt, bool Succsess) = FindDocking(boat, firstDock, mooringsFirstDock);
+            if (Succsess)
             {
-                int[] dockAt = FindDocking(harbor, boat);
                 for (int i = 0; i < dockAt.Length; i++)
                 {
-                    harbor.Moorings[dockAt[i]].IdOfDockedBoat.Add(boat.Id);
-                    harbor.Moorings[dockAt[i]].isEmpthy = false;
-                    harbor.Moorings[dockAt[i]].SpaceLeft -= boat.Size;
+                    mooringsFirstDock[dockAt[i]].IdOfDockedBoat.Add(boat.Id);
+                    mooringsFirstDock[dockAt[i]].isEmpthy = false;
+                    mooringsFirstDock[dockAt[i]].SpaceLeft -= boat.Size;
 
                 }
                 if (dockAt.Length == 1)
@@ -95,35 +101,59 @@ namespace Hamnen.Classes
                 {
                     boat.DockedAt = $"{dockAt[0]}-{dockAt[dockAt.Length - 1]}";
                 }
-                harbor.DockedBoats.Add(boat);
+                firstDock.Add(boat);
             }
-            catch
+            else
             {
-                harbor.BoatsRejected++;
-                if (harbor.Message == "")
+                (dockAt, Succsess) = FindDocking(boat, secondDock, mooringsSecondDock);
+                if (Succsess)
                 {
-                    harbor.Message += $"En båt har blivit avisad för att den inte fick plats";
+                    for (int i = 0; i < dockAt.Length; i++)
+                    {
+                        mooringsSecondDock[dockAt[i]].IdOfDockedBoat.Add(boat.Id);
+                        mooringsSecondDock[dockAt[i]].isEmpthy = false;
+                        mooringsSecondDock[dockAt[i]].SpaceLeft -= boat.Size;
+
+                    }
+                    if (dockAt.Length == 1)
+                    {
+                        boat.DockedAt = dockAt[0].ToString();
+                    }
+                    else
+                    {
+                        boat.DockedAt = $"{dockAt[0]}-{dockAt[dockAt.Length - 1]}";
+                    }
+                    secondDock.Add(boat);
                 }
                 else
                 {
-                    harbor.Message += $"\nEn båt har blivit avisad för att den inte fick plats";
+                    Utils.BoatsRejected++;
+                    if (Utils.MessegeSecondDock == "")
+                    {
+                        Utils.MessegeSecondDock += $"En båt har blivit avisad för att den inte fick plats";
+                    }
+                    else
+                    {
+                        Utils.MessegeSecondDock += $"\nEn båt har blivit avisad för att den inte fick plats";
+                    }
                 }
             }
+
         }
 
-        public void RemoveFromDock(Boat boat, HarborViewModel harbor)
+        public void RemoveFromDock(Boat boat, ObservableCollection<Boat> Dock, Mooring[] moorings)
         {
             var tempList = new List<string>();
-            for (int i = 0; i < harbor.Moorings.Length; i++)
+            for (int i = 0; i < moorings.Length; i++)
             {
-                foreach (var boat2 in harbor.Moorings[i].IdOfDockedBoat)
+                foreach (var boat2 in moorings[i].IdOfDockedBoat)
                 {
                     if (boat2 == boat.Id)
                     {
-                        harbor.Moorings[i].isEmpthy = true;
-                        harbor.Moorings[i].SpaceLeft += boat.Size; //Not the best way
+                        moorings[i].isEmpthy = true;
+                        moorings[i].SpaceLeft += boat.Size;
                         tempList.Add(boat2);
-                        harbor.DockedBoats.Remove(boat);
+                        Dock.Remove(boat);
                     }
 
                 }
@@ -131,7 +161,7 @@ namespace Hamnen.Classes
                 {
                     foreach (var boatId in tempList)
                     {
-                        harbor.Moorings[i].IdOfDockedBoat.Remove(boatId);
+                        moorings[i].IdOfDockedBoat.Remove(boatId);
                     }
                 }
             }

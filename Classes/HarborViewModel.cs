@@ -13,17 +13,18 @@ namespace Hamnen.Classes
     public class HarborViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        IDock _dock;
+        #region Props
         public double SpaceLeft { get; set; }
-        public int _boatsRejected;
         public int BoatsRejected
         {
             get
             {
-                return _boatsRejected;
+                return Utils.BoatsRejected;
             }
             set
             {
-                _boatsRejected = value;
+                Utils.BoatsRejected = value;
                 NotifyPropertyChanged();
             }
         }
@@ -40,28 +41,54 @@ namespace Hamnen.Classes
                 NotifyPropertyChanged();
             }
         }
-        private string _message;
-        public string Message { 
+        public string MessageFirstDock { 
             get 
             {
-                return _message;
+                return Utils.MessegeFirstDock;
             }
             set 
             {
-                _message = value;
+                Utils.MessegeFirstDock = value;
                 NotifyPropertyChanged();
             } 
         }
-        private string _freeSpace;
-        public string FreeSpace
+
+
+        public string MessageSecondDock
         {
             get
             {
-                return _freeSpace;
+                return Utils.MessegeSecondDock;
             }
             set
             {
-                _freeSpace = value;
+                Utils.MessegeSecondDock = value;
+                NotifyPropertyChanged();
+            }
+        }
+        private string _freeSpaceFirstDock;
+        public string FreeSpaceFirstDock
+        {
+            get
+            {
+                return _freeSpaceFirstDock;
+            }
+            set
+            {
+                _freeSpaceFirstDock = value;
+                NotifyPropertyChanged();
+            }
+        }
+        private string _freeSpaceSecondDock;
+        public string FreeSpaceSecondDock
+        {
+            get
+            {
+                return _freeSpaceSecondDock;
+            }
+            set
+            {
+                _freeSpaceSecondDock = value;
                 NotifyPropertyChanged();
             }
         }
@@ -143,6 +170,7 @@ namespace Hamnen.Classes
                 NotifyPropertyChanged();
             }
         }
+        #endregion
         private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             if (PropertyChanged != null)
@@ -150,43 +178,69 @@ namespace Hamnen.Classes
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
             }
         }
-        public ObservableCollection<Boat> DockedBoats { get; set; }
-        public Mooring[] Moorings { get; set; } //Mooring är förtöjning på engelska men var det närmaste båtplats
+        public ObservableCollection<Boat> DockedBoatsFirstDock { get; set; }
+        public ObservableCollection<Boat> DockedBoatsSecondDock { get; set; }
+        public Mooring[] MooringsFirstDock { get; set; } //Mooring är förtöjning på engelska men var det närmaste båtplats
+        public Mooring[] MooringsSecondDock { get; set; } //Mooring är förtöjning på engelska men var det närmaste båtplats
 
         public HarborViewModel(int size)
         {
-            DockedBoats = new ObservableCollection<Boat>();
-            Moorings = new Mooring[size];
+            _dock = new FirstFit();
+            size /= 2;
+            DockedBoatsFirstDock = new ObservableCollection<Boat>();
+            DockedBoatsSecondDock = new ObservableCollection<Boat>();
+            MooringsFirstDock = new Mooring[size];
             for (int i = 0; i < size; i++)
             {
-                Moorings[i] = new Mooring();
+                MooringsFirstDock[i] = new Mooring();
             }
-            DockedBoats.CollectionChanged += DockedBoats_CollectionChanged;
+            MooringsSecondDock = new Mooring[size];
+            for (int i = 0; i < size; i++)
+            {
+                MooringsSecondDock[i] = new Mooring();
+            }
+            DockedBoatsFirstDock.CollectionChanged += DockedBoatsFirstDock_CollectionChanged;
+            DockedBoatsSecondDock.CollectionChanged += DockedBoatsSecondDock_CollectionChanged;
         }
 
-
-        private void DockedBoats_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        #region Events
+        public void LogFreeSpace()
+        {
+            FreeSpaceFirstDock = "Lediga platser:";
+            var freeSpace = MooringsFirstDock.FindFreeSpace();
+            foreach (var mooring in freeSpace)
+            {
+                FreeSpaceFirstDock += $"\nPlats: {mooring}";
+            }
+            FreeSpaceSecondDock = "Lediga platser:";
+            freeSpace = MooringsSecondDock.FindFreeSpace();
+            foreach (var mooring in freeSpace)
+            {
+                FreeSpaceSecondDock += $"\nPlats: {mooring}";
+            }
+        }
+        private void DockedBoatsFirstDock_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)
             {
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
-                    if (Message == "")
+                    if (MessageFirstDock == "")
                     {
-                        Message += $"En båt har kommit till hamnen";
+                        MessageFirstDock += $"En båt har kommit till hamnen";
                     }
                     else
                     {
-                        Message += $"\nEn båt har kommit till hamnen";
+                        MessageFirstDock += $"\nEn båt har kommit till hamnen";
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
-                    if (Message == "")
+                    if (MessageFirstDock == "")
                     {
-                        Message += $"\nEn båt har lämnat hamnen";
+                        MessageFirstDock += $"\nEn båt har lämnat hamnen";
                     }
                     else
                     {
-                        Message += $"\nEn båt har lämnat hamnen";
+                        MessageFirstDock += $"\nEn båt har lämnat hamnen";
                     }
                     break;
                 case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
@@ -199,22 +253,111 @@ namespace Hamnen.Classes
                     break;
             }
         }
-        public void UpdateHarborStatistics() //används inte just nu
+        private void DockedBoatsSecondDock_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            int temp = DockedBoats.Where(q => q.BoatType == "Roddbåt").Count();
-            AmountOfRowBoats = temp;
-            temp = DockedBoats.Where(q => q.BoatType == "Motorbåt").Count();
-            AmountOfMotorBoats = temp;
-            temp = DockedBoats.Where(q => q.BoatType == "Lastfartyg").Count();
-            AmountOfCargoShips = temp;
-            temp = DockedBoats.Where(q => q.BoatType == "Segelbåt").Count();
-            AmountOfSailBoats = temp;
-            temp = DockedBoats.Where(q => q.BoatType == "Katamaran").Count();
-            AmountOfCatamarans = temp;
-            temp = Moorings.FindFreeSpace().Count;
-            MooringsLeft = temp;
-            double temp2 = DockedBoats.AvrageSpeed();
-            AvrageSpeed = temp2;
+            switch (e.Action)
+            {
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+                    if (MessageSecondDock == "")
+                    {
+                        MessageSecondDock += $"En båt har kommit till hamnen";
+                    }
+                    else
+                    {
+                        MessageSecondDock += $"\nEn båt har kommit till hamnen";
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+                    if (MessageSecondDock == "")
+                    {
+                        MessageSecondDock += $"\nEn båt har lämnat hamnen";
+                    }
+                    else
+                    {
+                        MessageSecondDock += $"\nEn båt har lämnat hamnen";
+                    }
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+                    break;
+                case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+                    break;
+                default:
+                    break;
+            }
         }
+
+        #endregion
+
+        public void NextDay()
+        {
+            MessageFirstDock = "";
+            MessageSecondDock = "";
+            foreach (Boat boat in DockedBoatsFirstDock)
+            {
+                boat.TimeBeforeLeaving--;
+            }
+            List<Boat> boatsToRemove = DockedBoatsFirstDock.Where(b => b.TimeBeforeLeaving <= 0).ToList();
+            if (boatsToRemove.Count > 0)
+            {
+                foreach (var boat in boatsToRemove)
+                {
+                    _dock.RemoveFromDock(boat, DockedBoatsFirstDock, MooringsFirstDock);
+                }
+            }
+            foreach (Boat boat in DockedBoatsSecondDock)
+            {
+                boat.TimeBeforeLeaving--;
+            }
+            boatsToRemove = DockedBoatsSecondDock.Where(b => b.TimeBeforeLeaving <= 0).ToList();
+            if (boatsToRemove.Count > 0)
+            {
+                foreach (var boat in boatsToRemove)
+                {
+                    _dock.RemoveFromDock(boat, DockedBoatsSecondDock, MooringsSecondDock);
+                }
+            }
+            var newBoats = Utils.GenerateBoats(5);
+            foreach (var boat in newBoats)
+            {
+                _dock.Dock(boat, DockedBoatsFirstDock, DockedBoatsSecondDock, MooringsFirstDock, MooringsSecondDock, MessageFirstDock, MessageSecondDock);
+                NotifyPropertyChanged(nameof(MessageFirstDock));
+                NotifyPropertyChanged(nameof(MessageSecondDock));
+                NotifyPropertyChanged(nameof(BoatsRejected));
+            }
+            Utils.SaveHarbor(DockedBoatsFirstDock, DockedBoatsSecondDock, MooringsFirstDock, MooringsSecondDock);
+            LogFreeSpace();
+            UpdateHarborStatistics();
+        }
+        /// <summary>
+        /// A method to update all statistics of the harbor
+        /// </summary>
+        #region Statistics
+        public void UpdateHarborStatistics() 
+        {
+            int temp = DockedBoatsFirstDock.Where(q => q.BoatType == "Roddbåt").Count();
+            int temp2 = DockedBoatsSecondDock.Where(q => q.BoatType == "Roddbåt").Count();
+            AmountOfRowBoats = temp + temp2;
+            temp = DockedBoatsFirstDock.Where(q => q.BoatType == "Motorbåt").Count();
+            temp2 = DockedBoatsSecondDock.Where(q => q.BoatType == "Motorbåt").Count();
+            AmountOfMotorBoats = temp + temp2;
+            temp = DockedBoatsFirstDock.Where(q => q.BoatType == "Lastfartyg").Count();
+            temp2 = DockedBoatsSecondDock.Where(q => q.BoatType == "Lastfartyg").Count();
+            AmountOfCargoShips = temp + temp2;
+            temp = DockedBoatsFirstDock.Where(q => q.BoatType == "Segelbåt").Count();
+            temp2 = DockedBoatsSecondDock.Where(q => q.BoatType == "Segelbåt").Count();
+            AmountOfSailBoats = temp + temp2;
+            temp = DockedBoatsFirstDock.Where(q => q.BoatType == "Katamaran").Count();
+            temp2 = DockedBoatsSecondDock.Where(q => q.BoatType == "Katamaran").Count();
+            AmountOfCatamarans = temp + temp2;
+            temp = MooringsFirstDock.FindFreeSpace().Count;
+            temp2 = MooringsSecondDock.FindFreeSpace().Count;
+            MooringsLeft = temp + temp2;
+            double temp3 = DockedBoatsFirstDock.AvrageSpeed();
+            double temp4 = DockedBoatsSecondDock.AvrageSpeed();
+            AvrageSpeed = temp3 + temp4;
+        }
+        #endregion
     }
 }

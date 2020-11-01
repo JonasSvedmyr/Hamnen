@@ -5,9 +5,13 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Hamnen"
         mc:Ignorable="d"
+        MinWidth="1200"
+        MinHeight="350"
         Title="MainWindow" Height="450" Width="700">
     <Grid>
         <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="auto"/>
@@ -20,8 +24,9 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <ScrollViewer Grid.Row="0" Grid.Column="0">
-            <DataGrid x:Name="DockedShips" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding DockedBoats}">
+        <!--First data grid-->
+        <ScrollViewer Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <DataGrid x:Name="DockedShips" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding DockedBoatsFirstDock}">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Plats" Binding="{Binding Path=DockedAt}"/>
                     <DataGridTextColumn Header="Båttyp" Binding="{Binding Path=BoatType}"/>
@@ -32,12 +37,43 @@
                 </DataGrid.Columns>
             </DataGrid>
         </ScrollViewer>
+        <!--Logs for the first data grid-->
         <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5" Grid.Column="0" Grid.Row="1">
             <ScrollViewer >
-                <TextBlock x:Name="DataLog" Text="{Binding Message}"/>
+                <TextBlock x:Name="DataLog" Text="{Binding MessageFirstDock}"/>
             </ScrollViewer>
         </Border>
-        <StackPanel Grid.Row="0" Grid.Column="2" Margin="5">
+        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5" Grid.Column="1" Grid.Row="1">
+            <ScrollViewer>
+                <TextBlock x:Name="FreeSpaceLog" Text="{Binding FreeSpaceFirstDock}"/>
+            </ScrollViewer>
+        </Border>
+        <!--Second data grid-->
+        <ScrollViewer Grid.Row="0" Grid.Column="3" Grid.ColumnSpan="2">
+            <DataGrid x:Name="DockedShips2" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding DockedBoatsSecondDock}">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Plats" Binding="{Binding Path=DockedAt}"/>
+                    <DataGridTextColumn Header="Båttyp" Binding="{Binding Path=BoatType}"/>
+                    <DataGridTextColumn Header="Nr" Binding="{Binding Path=Id}"/>
+                    <DataGridTextColumn Header="Vikt" Binding="{Binding Path=Weight}"/>
+                    <DataGridTextColumn Header="Max hastighet" Binding="{Binding Path=MaxVelocity}"/>
+                    <DataGridTextColumn Header="Övrigt" Binding="{Binding Path=Other}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </ScrollViewer>
+        <!--Logs for the Second data grid-->
+        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5" Grid.Column="3" Grid.Row="1">
+            <ScrollViewer >
+                <TextBlock x:Name="DataLog2" Text="{Binding MessageSecondDock}"/>
+            </ScrollViewer>
+        </Border>
+        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5" Grid.Column="4" Grid.Row="1">
+            <ScrollViewer>
+                <TextBlock x:Name="FreeSpaceLog2" Text="{Binding FreeSpaceSecondDock}"/>
+            </ScrollViewer>
+        </Border>
+        <!--Statistics for the harbor-->
+        <StackPanel Margin="5" Grid.Column="5" Grid.Row="0">
             <StackPanel Orientation="Horizontal">
                 <TextBlock x:Name="NumberOfRowBoatsTextBlock" Text="Antal roddbåtar: "/>
                 <TextBlock Text="{Binding AmountOfRowBoats}"/>
@@ -72,11 +108,6 @@
                 <TextBlock Text="{Binding BoatsRejected}"/>
             </StackPanel>
         </StackPanel>
-        <Border BorderBrush="Black" BorderThickness="1" Padding="2" Margin="5" Grid.Column="2" Grid.Row="1">
-            <ScrollViewer>
-                <TextBlock x:Name="FreeSpaceLog" Text="{Binding FreeSpace}"/>
-            </ScrollViewer>
-        </Border>
         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="0">
             <Button x:Name="NextDayButton" Margin="5" Content="Next Day" Click="ButtonNewDay_click"/>
         </StackPanel>
