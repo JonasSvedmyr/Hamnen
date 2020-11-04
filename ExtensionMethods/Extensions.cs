@@ -9,19 +9,6 @@ namespace Hamnen.ExtensionMethods
 {
     static class Extensions
     {
-        //public static List<int> FindFreeSpace(this HarborViewModel harbor)
-        //{
-        //    List<int> moornings = new List<int>();
-
-        //    for (int i = 0; i < harbor.MooringsFirstDock.Length; i++)
-        //    {
-        //        if (harbor.MooringsFirstDock[i].isEmpthy)
-        //        {
-        //            moornings.Add(i);
-        //        }
-        //    }
-        //    return moornings;
-        //}
         public static List<int> FindFreeSpace(this Mooring[] moorings)
         {
             List<int> moornings = new List<int>();

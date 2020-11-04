@@ -15,7 +15,7 @@ namespace Hamnen.Classes
             MaxVelocity = Utils.Random.Next(1, 60 + 1) * 1.852;
             HorsePower = Utils.Random.Next(10, 1000 + 1);//hk
             TimeBeforeLeaving = 3;
-            Size = 1;
+            Size = 2;
             Other = $"Hästkraft: {HorsePower}";
         }
         public MotorBoat(string id, int weight, double maxVelocity, string horsePower, int timeBeforeLeaving, string dockedAt)

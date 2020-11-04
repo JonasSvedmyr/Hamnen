@@ -16,7 +16,7 @@ namespace Hamnen.Classes
             MaxVelocity = Utils.Random.Next(1, 20 + 1) * 1.852; //Km/H
             NumberOfContainers = Utils.Random.Next(0, 500 + 1);
             TimeBeforeLeaving = 6;
-            Size = 4;
+            Size = 8;
             Other = $"Containers: {NumberOfContainers}";
         }
         public CargoShip(string id, int weight, double maxVelocity, string numberOfContainers, int timeBeforeLeaving, string dockedAt)
@@ -26,7 +26,7 @@ namespace Hamnen.Classes
             MaxVelocity = maxVelocity;
             TimeBeforeLeaving = timeBeforeLeaving;
             BoatType = "Lastfartyg";
-            Size = 4;
+            Size = 8;
             Other = numberOfContainers;
             DockedAt = dockedAt;
         }

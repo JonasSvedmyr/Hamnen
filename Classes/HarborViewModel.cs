@@ -185,7 +185,7 @@ namespace Hamnen.Classes
 
         public HarborViewModel(int size)
         {
-            _dock = new FirstFit();
+            _dock = new DockingAlgoritm();
             size /= 2;
             DockedBoatsFirstDock = new ObservableCollection<Boat>();
             DockedBoatsSecondDock = new ObservableCollection<Boat>();
@@ -290,6 +290,24 @@ namespace Hamnen.Classes
 
         #endregion
 
+        public void Load()
+        {
+            try
+            {
+                Utils.LoadHarbor(DockedBoatsFirstDock, DockedBoatsSecondDock, MooringsFirstDock, MooringsSecondDock);
+            }
+            catch (System.Exception)
+            {
+                var newBoats = Utils.GenerateBoats(5, DockedBoatsFirstDock, DockedBoatsSecondDock);
+                foreach (var boat in newBoats)
+                {
+                    _dock.Dock(boat, DockedBoatsFirstDock, DockedBoatsSecondDock, MooringsFirstDock, MooringsSecondDock, MessageFirstDock, MessageSecondDock);
+                }
+            }
+            UpdateHarborStatistics();
+            LogFreeSpace();
+        }
+
         public void NextDay()
         {
             MessageFirstDock = "";
@@ -318,7 +336,7 @@ namespace Hamnen.Classes
                     _dock.RemoveFromDock(boat, DockedBoatsSecondDock, MooringsSecondDock);
                 }
             }
-            var newBoats = Utils.GenerateBoats(5);
+            var newBoats = Utils.GenerateBoats(5, DockedBoatsFirstDock, DockedBoatsSecondDock);
             foreach (var boat in newBoats)
             {
                 _dock.Dock(boat, DockedBoatsFirstDock, DockedBoatsSecondDock, MooringsFirstDock, MooringsSecondDock, MessageFirstDock, MessageSecondDock);

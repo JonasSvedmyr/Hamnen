@@ -15,7 +15,7 @@ namespace Hamnen.Classes
             MaxVelocity = Utils.Random.Next(1, 12 + 1) * 1.852;
             BoatLenght = Utils.Random.Next(10, 60 + 1);//Fot
             TimeBeforeLeaving = 4;
-            Size = 2;
+            Size = 4;
             Other = $"Båtlängd: {BoatLenght} m";
         }
         public Sailboat(string id, int weight, double maxVelocity, string boatLenght, int timeBeforeLeaving, string dockedAt)
@@ -25,7 +25,7 @@ namespace Hamnen.Classes
             MaxVelocity = maxVelocity;
             TimeBeforeLeaving = timeBeforeLeaving;
             BoatType = "Segelbåt";
-            Size = 2;
+            Size = 4;
             Other = boatLenght;
             DockedAt = dockedAt;
         }

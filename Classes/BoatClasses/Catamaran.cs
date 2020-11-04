@@ -15,7 +15,7 @@ namespace Hamnen.Classes.BoatClasses
             MaxVelocity = Utils.Random.Next(1, 12 + 1) * 1.852; //Km/H
             AmountOfBeds = Utils.Random.Next(1, 4 + 1);
             TimeBeforeLeaving = 3;
-            Size = 3;
+            Size = 6;
             Other = $"Antal Bäddplatser: {AmountOfBeds}";
         }
         public Catamaran(string id, int weight, double maxVelocity, string amountOfBeds, int timeBeforeLeaving, string dockedAt)
@@ -25,7 +25,7 @@ namespace Hamnen.Classes.BoatClasses
             MaxVelocity = maxVelocity;
             TimeBeforeLeaving = timeBeforeLeaving;
             BoatType = "Katamaran";
-            Size = 3;
+            Size = 6;
             Other = amountOfBeds;
             DockedAt = dockedAt;
         }

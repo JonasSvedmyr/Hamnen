@@ -15,7 +15,7 @@ namespace Hamnen.Classes
             MaxVelocity = Utils.Random.Next(1, 3 + 1) * 1.852;
             MaxAmountOfPeople = Utils.Random.Next(1, 6 + 1);
             TimeBeforeLeaving = 1;
-            Size = 0.5F;
+            Size = 1;
             Other = $"Max antal pers: {MaxAmountOfPeople}";
         }
         public RowBoat(string id, int weight, double maxVelocity, string maxAmountOfPeople, int timeBeforeLeaving, string dockedAt)
@@ -25,7 +25,7 @@ namespace Hamnen.Classes
             MaxVelocity = maxVelocity;
             TimeBeforeLeaving = timeBeforeLeaving;
             BoatType = "Roddbåt";
-            Size = 0.5F;
+            Size = 1;
             Other = maxAmountOfPeople;
             DockedAt = dockedAt;
         }

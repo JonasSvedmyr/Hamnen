@@ -136,7 +136,7 @@ namespace Hamnen.Classes
                 {
                     temp = line.Split(";");
                     MooringId = int.Parse(temp[0]);
-                    mooringsFirstDock[MooringId].SpaceLeft = double.Parse(temp[2]);
+                    mooringsFirstDock[MooringId].SpaceLeft = int.Parse(temp[2]);
                     mooringsFirstDock[MooringId].isEmpthy = false;
                     temp2 = temp[1].Split(",");
                     for (int i = 0; i < temp2.Length; i++)
@@ -190,7 +190,7 @@ namespace Hamnen.Classes
                 {
                     temp = line.Split(";");
                     MooringId = int.Parse(temp[0]);
-                    mooringsSecondDock[MooringId].SpaceLeft = double.Parse(temp[2]);
+                    mooringsSecondDock[MooringId].SpaceLeft = int.Parse(temp[2]);
                     mooringsSecondDock[MooringId].isEmpthy = false;
                     temp2 = temp[1].Split(",");
                     for (int i = 0; i < temp2.Length; i++)
@@ -200,35 +200,57 @@ namespace Hamnen.Classes
                 }
             }
         }
-        public static List<Boat> GenerateBoats(int numberToGenerate)
+        public static List<Boat> GenerateBoats(int numberToGenerate, ObservableCollection<Boat> DockedBoatsFirstDock, ObservableCollection<Boat> DockedBoatsSecondDock)
         {
             int randomNumber;
             List<Boat> boats = new List<Boat>();
-            for (int i = 0; i < numberToGenerate; i++)
+            Boat boat = new RowBoat();
+            for (int i = 0; i < numberToGenerate;)
             {
                 randomNumber = Random.Next(0, 5);
                 switch (randomNumber)
                 {
                     case 0:
-                        boats.Add(new RowBoat());
+                        boat=new RowBoat();
                         break;
                     case 1:
-                        boats.Add(new MotorBoat());
+                        boat=new MotorBoat();
                         break;
                     case 2:
-                        boats.Add(new Sailboat());
+                        boat =new Sailboat();
                         break;
                     case 3:
-                        boats.Add(new CargoShip());
+                        boat = new CargoShip();
                         break;
                     case 4:
-                        boats.Add(new Catamaran());
+                        boat = new Catamaran();
                         break;
                     default:
                         break;
                 }
+                if(!HasDuplicate(boat, DockedBoatsFirstDock))
+                {
+                    if (!HasDuplicate(boat, DockedBoatsSecondDock))
+                    {
+                        boats.Add(boat);
+                        i++;
+                    }
+                }
+
             }
             return boats;
+        }
+
+        static public bool HasDuplicate(Boat boat, ObservableCollection<Boat> dock)
+        {
+            foreach (var boat2 in dock)
+            {
+                if(boat.Id == boat2.Id)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

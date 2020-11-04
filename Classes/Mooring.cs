@@ -7,7 +7,7 @@ namespace Hamnen.Classes
     public class Mooring
     {
         public bool isEmpthy { get; set; }
-        public double SpaceLeft { get; set; } = 1;
+        public int SpaceLeft { get; set; } = 2;
         public List<string> IdOfDockedBoat { get; set; }
         public Mooring()
         {
